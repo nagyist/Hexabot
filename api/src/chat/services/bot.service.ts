@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Hexastack. All rights reserved.
+ * Copyright © 2025 Hexastack. All rights reserved.
  *
  * Licensed under the GNU Affero General Public License v3.0 (AGPLv3) with the following additional terms:
  * 1. The name "Hexabot" is a trademark of Hexastack. You may not use this name in derivative works without express written permission.
@@ -9,6 +9,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
+import { BotStatsType } from '@/analytics/schemas/bot-stats.schema';
 import EventWrapper from '@/channel/lib/EventWrapper';
 import { LoggerService } from '@/logger/logger.service';
 import { SettingService } from '@/setting/services/setting.service';
@@ -81,8 +82,18 @@ export class BotService {
       .getHandler()
       .sendMessage(event, envelope, options, context);
 
-    this.eventEmitter.emit('hook:stats:entry', 'outgoing', 'Outgoing');
-    this.eventEmitter.emit('hook:stats:entry', 'all_messages', 'All Messages');
+    this.eventEmitter.emit(
+      'hook:stats:entry',
+      BotStatsType.outgoing,
+      'Outgoing',
+      recipient,
+    );
+    this.eventEmitter.emit(
+      'hook:stats:entry',
+      BotStatsType.all_messages,
+      'All Messages',
+      recipient,
+    );
 
     // Trigger sent message event
     const sentMessage: MessageCreateDto = {
@@ -265,7 +276,12 @@ export class BotService {
 
       if (next) {
         // Increment stats about popular blocks
-        this.eventEmitter.emit('hook:stats:entry', 'popular', next.name);
+        this.eventEmitter.emit(
+          'hook:stats:entry',
+          BotStatsType.popular,
+          next.name,
+          convo.sender,
+        );
         // Go next!
         this.logger.debug('Respond to nested conversion! Go next ', next.id);
         try {
@@ -329,8 +345,9 @@ export class BotService {
 
       this.eventEmitter.emit(
         'hook:stats:entry',
-        'existing_conversations',
+        BotStatsType.existing_conversations,
         'Existing conversations',
+        subscriber,
       );
       this.logger.debug('Conversation has been captured! Responding ...');
       return await this.handleIncomingMessage(conversation, event);
@@ -350,10 +367,15 @@ export class BotService {
    * @param block - Starting block
    */
   async startConversation(event: EventWrapper<any, any>, block: BlockFull) {
-    // Increment popular stats
-    this.eventEmitter.emit('hook:stats:entry', 'popular', block.name);
     // Launching a new conversation
     const subscriber = event.getSender();
+    // Increment popular stats
+    this.eventEmitter.emit(
+      'hook:stats:entry',
+      BotStatsType.popular,
+      block.name,
+      subscriber,
+    );
 
     try {
       const convo = await this.conversationService.create({
@@ -361,8 +383,9 @@ export class BotService {
       });
       this.eventEmitter.emit(
         'hook:stats:entry',
-        'new_conversations',
+        BotStatsType.new_conversations,
         'New conversations',
+        subscriber,
       );
 
       try {
