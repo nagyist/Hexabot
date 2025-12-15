@@ -15,24 +15,16 @@ import { Chip } from "@mui/material";
 
 import { UnifiedIcon } from "@/app-components/icons/UnifiedIcon";
 import TriggerIcon from "@/app-components/svg/TriggerIcon";
-import { useGet } from "@/hooks/crud/useGet";
 import { useTranslate } from "@/hooks/useTranslate";
-import { EntityType } from "@/services/types";
 import { Pattern } from "@/types/block.types";
 import { truncate } from "@/utils/text";
 
+import { useNode } from "../../hooks/useNode";
 import { BlockTypes } from "../../types/visual-editor.types";
-import { getBlockConfig } from "../../utils/block.utils";
 
-export const NodeBody = ({ blockId }: { blockId: string }) => {
+export const NodeBody = () => {
   const { t } = useTranslate();
-  const { data: block } = useGet(blockId, { entity: EntityType.BLOCK });
-
-  if (!block?.message) {
-    return null;
-  }
-
-  const config = getBlockConfig(block.message);
+  const { config, data: block } = useNode();
 
   return (
     <div className="node-block-field-container">

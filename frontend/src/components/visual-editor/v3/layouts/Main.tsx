@@ -60,14 +60,16 @@ export const Main = () => {
   const { searchPayload } = useSearch<EntityType.BLOCK>({
     $eq: [{ category: selectedCategoryId }],
   });
-  const { selectedCategory, setDefaultCategory } = useCategories();
+  const { selectedCategory, setDefaultCategory, categories } = useCategories();
   const { mutate: updateCategory } = useUpdate(EntityType.CATEGORY);
   const { mutate: updateBlock } = useUpdate(EntityType.BLOCK);
   const { data: blocks } = useFind(
     { entity: EntityType.BLOCK, format: Format.FULL },
     { hasCount: false, params: searchPayload },
     {
-      enabled: !!selectedCategoryId,
+      enabled:
+        !!selectedCategoryId &&
+        categories.findIndex((c) => c.id === selectedCategoryId) !== -1,
       keepPreviousData: true,
     },
   );

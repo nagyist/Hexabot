@@ -6,22 +6,17 @@
  * 2. All derivative works must include clear attribution to the original creator and software, Hexastack and Hexabot, in a prominent location (e.g., in the software's "About" section, documentation, and README file).
  */
 
-import clsx from "clsx";
-import { PropsWithChildren } from "react";
+import { useContext } from "react";
 
-import { useNode } from "../../hooks/useNode";
+import { NodeContext } from "../contexts/NodeContext";
+import type { INodeContext } from "../types/node-context.types";
 
-export const NodeContainer = ({ children }: PropsWithChildren) => {
-  const { config } = useNode();
+export const useNode = (): INodeContext => {
+  const context = useContext(NodeContext);
 
-  return (
-    <div
-      className={clsx("custom-node")}
-      style={{
-        border: `1px solid ${config.color}`,
-      }}
-    >
-      {children}
-    </div>
-  );
+  if (!context) {
+    throw new Error("useNode must be used within an NodeContext");
+  }
+
+  return context;
 };

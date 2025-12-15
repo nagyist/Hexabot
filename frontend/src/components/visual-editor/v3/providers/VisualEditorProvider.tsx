@@ -77,15 +77,17 @@ export const VisualEditorProvider: React.FC<VisualEditorContextProps> = ({
   const getQuery = (key: string): string =>
     typeof router.query[key] === "string" ? router.query[key] : "";
   const updateVisualEditorURL = async (
-    category: string,
-    blockIds: string[] = [],
+    category?: string,
+    blockIds?: string[],
   ) => {
-    const blockParam = Array.isArray(blockIds) && blockIds.length ? `/${blockIds.join(",")}` : "";
+    const blockParam =
+      Array.isArray(blockIds) && blockIds.length
+        ? `/${blockIds.join(",")}`
+        : "";
+    const pathParams = category ? `flows/${category}${blockParam}` : "";
 
     if (router.pathname.startsWith(`/${RouterType.VISUAL_EDITOR}`)) {
-      await router.push(
-        `/${RouterType.VISUAL_EDITOR}/flows/${category}${blockParam}`,
-      );
+      await router.push(`/${RouterType.VISUAL_EDITOR}/${pathParams}`);
     }
   };
   const removeBlockIdParam = async () => {

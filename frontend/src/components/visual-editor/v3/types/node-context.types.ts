@@ -6,22 +6,26 @@
  * 2. All derivative works must include clear attribution to the original creator and software, Hexastack and Hexabot, in a prominent location (e.g., in the software's "About" section, documentation, and README file).
  */
 
-import clsx from "clsx";
-import { PropsWithChildren } from "react";
+import type { FC, ReactNode, SVGProps } from "react";
 
-import { useNode } from "../../hooks/useNode";
+import type { BlockType } from "@/types/block.types";
 
-export const NodeContainer = ({ children }: PropsWithChildren) => {
-  const { config } = useNode();
+import type { NodeBlockData, NodeData } from "./visual-editor.types";
 
-  return (
-    <div
-      className={clsx("custom-node")}
-      style={{
-        border: `1px solid ${config.color}`,
-      }}
-    >
-      {children}
-    </div>
-  );
+export interface INodeContext {
+  id: string;
+  node: NodeData;
+  data: NodeBlockData;
+  config: TConfig;
+}
+
+export type TConfig = {
+  color: string;
+  Icon: FC<SVGProps<SVGSVGElement>>;
+  type: BlockType;
 };
+
+export interface INodeContextProps {
+  id: string;
+  children: ReactNode;
+}

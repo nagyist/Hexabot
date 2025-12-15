@@ -12,6 +12,7 @@ import { FC, useMemo } from "react";
 
 import { useTranslate } from "@/hooks/useTranslate";
 
+import { NodeProvider } from "../../providers/NodeProvider";
 import { LinkType, PortType } from "../../types/visual-editor.types";
 import { PortHandle } from "../handlers/PortHandle";
 
@@ -93,47 +94,49 @@ export const NodeBlock: FC<NodeProps> = ({ id: blockId }) => {
   }
 
   return (
-    <NodeContainer blockId={blockId}>
-      <PortHandle
-        type={PortType.TARGET}
-        position={Position.Left}
-        style={{
-          top: "96px",
-          left: "-6px",
-          borderTopRightRadius: "0",
-          borderBottomRightRadius: "0",
-        }}
-      />
-      <NodeHeader blockId={blockId} />
-      <NodeBody blockId={blockId} />
-      <PortHandle
-        type={PortType.SOURCE}
-        position={Position.Right}
-        id={LinkType.NEXT_BLOCKS}
-        style={{
-          right: "-6px",
-          top: "80px",
-          borderTopLeftRadius: "0",
-          borderBottomLeftRadius: "0",
-        }}
-        aria-disabled={!disableNextBlocks}
-        isConnectable={disableNextBlocks}
-        isValidConnection={() => disableNextBlocks}
-      />
-      <PortHandle
-        type={PortType.SOURCE}
-        position={Position.Right}
-        id={LinkType.ATTACHED}
-        style={{
-          right: "-6px",
-          top: "120px",
-          borderTopLeftRadius: "0",
-          borderBottomLeftRadius: "0",
-        }}
-        aria-disabled={!disableAttached}
-        isConnectable={disableAttached}
-        isValidConnection={() => disableAttached}
-      />
-    </NodeContainer>
+    <NodeProvider id={blockId}>
+      <NodeContainer>
+        <PortHandle
+          type={PortType.TARGET}
+          position={Position.Left}
+          style={{
+            top: "96px",
+            left: "-6px",
+            borderTopRightRadius: "0",
+            borderBottomRightRadius: "0",
+          }}
+        />
+        <NodeHeader />
+        <NodeBody />
+        <PortHandle
+          type={PortType.SOURCE}
+          position={Position.Right}
+          id={LinkType.NEXT_BLOCKS}
+          style={{
+            right: "-6px",
+            top: "80px",
+            borderTopLeftRadius: "0",
+            borderBottomLeftRadius: "0",
+          }}
+          aria-disabled={!disableNextBlocks}
+          isConnectable={disableNextBlocks}
+          isValidConnection={() => disableNextBlocks}
+        />
+        <PortHandle
+          type={PortType.SOURCE}
+          position={Position.Right}
+          id={LinkType.ATTACHED}
+          style={{
+            right: "-6px",
+            top: "120px",
+            borderTopLeftRadius: "0",
+            borderBottomLeftRadius: "0",
+          }}
+          aria-disabled={!disableAttached}
+          isConnectable={disableAttached}
+          isValidConnection={() => disableAttached}
+        />
+      </NodeContainer>
+    </NodeProvider>
   );
 };
