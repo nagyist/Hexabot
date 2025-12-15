@@ -6,11 +6,12 @@
  * 2. All derivative works must include clear attribution to the original creator and software, Hexastack and Hexabot, in a prominent location (e.g., in the software's "About" section, documentation, and README file).
  */
 
-import { Cancelable } from "@mui/utils/debounce";
-import { Edge, Node, XYPosition } from "@xyflow/react";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import type { Cancelable } from "@mui/utils/debounce";
+import type { Edge, Node, XYPosition } from "@xyflow/react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-import {
+import type {
+  BlockMessage,
   BlockType,
   IBlock,
   IBlockAttributes,
@@ -73,7 +74,7 @@ export type EdgeLink = Edge & { id: string; source: string; target: string };
 export type NodeBlockData = {
   type: BlockType;
   title: string;
-  message: string | string[];
+  message: BlockMessage;
   starts_conversation?: boolean;
   patterns?: Pattern[];
   nodeType?: string;
