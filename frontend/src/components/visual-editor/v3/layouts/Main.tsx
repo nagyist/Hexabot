@@ -77,7 +77,7 @@ export const Main = () => {
       JSON.stringify(
         blocks
           .filter((b) => b.starts_conversation)
-          .map((b) => b.starts_conversation),
+          .map((b) => [b.starts_conversation, b.category]),
       ),
     ],
   );
