@@ -47,7 +47,7 @@ export interface IVisualEditorContext {
   getQuery: (key: string) => string;
   removeBlockIdParam: () => Promise<void>;
   updateVisualEditorURL: (
-    category: string,
+    category?: string,
     blockIds?: string[],
   ) => Promise<void>;
 }

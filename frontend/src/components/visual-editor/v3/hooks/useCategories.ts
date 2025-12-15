@@ -14,7 +14,8 @@ import { EntityType } from "@/services/types";
 import { useVisualEditor } from "./useVisualEditor";
 
 export const useCategories = () => {
-  const { selectedCategoryId, setSelectedCategoryId } = useVisualEditor();
+  const { selectedCategoryId, setSelectedCategoryId, updateVisualEditorURL } =
+    useVisualEditor();
   const { data: categories } = useFind(
     { entity: EntityType.CATEGORY },
     {
@@ -22,9 +23,15 @@ export const useCategories = () => {
       initialSortState: [{ field: "createdAt", sort: "asc" }],
     },
     {
-      onSuccess([category]) {
-        if (!selectedCategoryId && category) {
-          setSelectedCategoryId(category.id);
+      onSuccess(categories) {
+        if (!categories[0].id) {
+          return;
+        }
+
+        if (!selectedCategoryId) {
+          setSelectedCategoryId(categories[0].id);
+        } else if (!categories.find((c) => c.id === selectedCategoryId)) {
+          updateVisualEditorURL();
         }
       },
     },
