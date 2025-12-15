@@ -195,7 +195,16 @@ export const ReactFlowWrapper = ({
   );
 
   useOnViewportChange({
-    onEnd: onViewport,
+    onEnd: ({ x, y, zoom }) => {
+      if (
+        defaultViewport.x === x &&
+        defaultViewport.y === y &&
+        defaultViewport.zoom === zoom
+      ) {
+        return;
+      }
+      onViewport({ x, y, zoom });
+    },
   });
 
   useEffect(() => {
