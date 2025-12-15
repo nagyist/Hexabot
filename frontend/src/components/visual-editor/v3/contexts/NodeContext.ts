@@ -11,8 +11,8 @@ import { createContext } from "react";
 import { INodeContext } from "../types/node-context.types";
 
 export const NodeContext = createContext<INodeContext>({
-  id: undefined,
+  id: "",
   node: {},
   data: {},
   config: {},
-} as unknown as INodeContext);
+} as INodeContext);
