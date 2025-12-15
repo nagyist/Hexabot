@@ -84,7 +84,7 @@ export const VisualEditorProvider: React.FC<VisualEditorContextProps> = ({
       Array.isArray(blockIds) && blockIds.length
         ? `/${blockIds.join(",")}`
         : "";
-    const pathParams = category ? `/flows/${category}${blockParam}` : "";
+    const pathParams = category ? `flows/${category}${blockParam}` : "";
 
     if (router.pathname.startsWith(`/${RouterType.VISUAL_EDITOR}`)) {
       await router.push(`/${RouterType.VISUAL_EDITOR}/${pathParams}`);

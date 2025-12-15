@@ -24,7 +24,7 @@ export const useCategories = () => {
     },
     {
       onSuccess(categories) {
-        if (!categories[0].id) {
+        if (!categories?.[0].id) {
           return;
         }
 
