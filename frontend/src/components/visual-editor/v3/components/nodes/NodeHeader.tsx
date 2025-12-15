@@ -13,7 +13,7 @@ import { useNode } from "../../hooks/useNode";
 import { NodeControls } from "./NodeControls";
 
 export const NodeHeader = () => {
-  const { config, data } = useNode();
+  const { config, data: block } = useNode();
 
   return (
     <div
@@ -30,7 +30,7 @@ export const NodeHeader = () => {
       <Tooltip
         sx={{ minHeight: "135px" }}
         arrow
-        title={data.title}
+        title={block.title}
         placement="top"
       >
         <div
@@ -40,7 +40,7 @@ export const NodeHeader = () => {
             textOverflow: "ellipsis",
           }}
         >
-          {data.title}{" "}
+          {block.title}{" "}
         </div>
       </Tooltip>
     </div>

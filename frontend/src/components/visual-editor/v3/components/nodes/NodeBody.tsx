@@ -24,14 +24,14 @@ import { BlockTypes } from "../../types/visual-editor.types";
 
 export const NodeBody = () => {
   const { t } = useTranslate();
-  const { config, data } = useNode();
+  const { config, data: block } = useNode();
 
   return (
     <div className="node-block-field-container">
       <div className="node-block-field">
         <TriggerIcon color={config.color} style={{ flexShrink: 0 }} />
-        {data?.patterns?.length ? (
-          data?.patterns
+        {block?.patterns?.length ? (
+          block?.patterns
             .map((pattern: Pattern) => {
               if (typeof pattern === "string") {
                 return pattern;
@@ -59,24 +59,24 @@ export const NodeBody = () => {
           <span style={{ color: "#939393" }}>{t("label.no_patterns")}</span>
         )}
       </div>
-      {config.type === "attachment" && "attachment" in data.message ? (
+      {config.type === "attachment" && "attachment" in block.message ? (
         <div className="node-block-field">
           <UnifiedIcon
             Icon={BrokenImageOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          {t("label.attachment")}: {data.message.attachment.type}
+          {t("label.attachment")}: {block.message.attachment.type}
         </div>
       ) : null}
-      {config.type === "plugin" && "plugin" in data.message ? (
+      {config.type === "plugin" && "plugin" in block.message ? (
         <div className="node-block-field ">
           <UnifiedIcon
             Icon={ExtensionOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          <span>Plugin: {data.message.plugin}</span>
+          <span>Plugin: {block.message.plugin}</span>
         </div>
       ) : null}
       {[BlockTypes.list].includes(BlockTypes[config.type]) ? (
@@ -90,15 +90,15 @@ export const NodeBody = () => {
         </div>
       ) : null}
       {config.type === "text" &&
-      Array.isArray(data.message) &&
-      data.message.length > 0 ? (
+      Array.isArray(block.message) &&
+      block.message.length > 0 ? (
         <div className="node-block-field ">
           <UnifiedIcon
             Icon={ChatBubbleOutlineOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          {truncate(data?.message[0])}
+          {truncate(block?.message[0])}
         </div>
       ) : null}
       {[BlockTypes.quickReplies, BlockTypes.buttons].includes(
@@ -113,7 +113,7 @@ export const NodeBody = () => {
           {
             //TODO: need to be updated
             // @ts-ignore
-            truncate(data?.message.text)
+            truncate(block?.message.text)
           }
         </div>
       ) : null}
@@ -131,8 +131,8 @@ export const NodeBody = () => {
               //TODO: need to be updated
               // @ts-ignore
               (
-                (data?.message as any).buttons ||
-                (data?.message as any).quickReplies
+                (block?.message as any).buttons ||
+                (block?.message as any).quickReplies
               ).map((button, idx: number) => (
                 <Chip
                   key={`${button.title}_${idx}`}
