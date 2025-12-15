@@ -21,6 +21,7 @@ import { useCreateBlock } from "../../hooks/useCreateBlocks";
 import { useDeleteManyBlocksDialog } from "../../hooks/useDeleteManyBlocksDialog";
 import { useEditBlockDialog } from "../../hooks/useEditBlockDialog";
 import { useMoveBlocksDialog } from "../../hooks/useMoveBlocksDialog";
+import { useNode } from "../../hooks/useNode";
 import { useVisualEditor } from "../../hooks/useVisualEditor";
 import { TooltipIcon } from "../TooltipIcon";
 
@@ -30,7 +31,8 @@ export const StyledIconButton = styled(IconButton)(() => ({
   "&:hover": { borderRadius: "0px" },
 }));
 
-export const NodeControls = ({ blockId }: { blockId: string }) => {
+export const NodeControls = () => {
+  const { id } = useNode();
   const hasPermission = useHasPermission();
   const { selectedNodeIds } = useVisualEditor();
   const { createNode } = useCreateBlock();
@@ -47,7 +49,7 @@ export const NodeControls = ({ blockId }: { blockId: string }) => {
       <ButtonGroup size="small">
         {hasPermission(EntityType.BLOCK, PermissionAction.UPDATE) ? (
           <StyledIconButton
-            onClick={() => openEditDialog(blockId)}
+            onClick={() => openEditDialog(id)}
             disabled={shouldDisableControlButton}
           >
             <TooltipIcon translationKey="button.edit" icon={EditIcon} />
@@ -65,7 +67,7 @@ export const NodeControls = ({ blockId }: { blockId: string }) => {
         <Divider orientation="vertical" />
         {hasPermission(EntityType.BLOCK, PermissionAction.CREATE) ? (
           <StyledIconButton
-            onClick={() => createNode(blockId)}
+            onClick={() => createNode(id)}
             disabled={shouldDisableControlButton}
           >
             <TooltipIcon

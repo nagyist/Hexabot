@@ -15,31 +15,23 @@ import { Chip } from "@mui/material";
 
 import { UnifiedIcon } from "@/app-components/icons/UnifiedIcon";
 import TriggerIcon from "@/app-components/svg/TriggerIcon";
-import { useGet } from "@/hooks/crud/useGet";
 import { useTranslate } from "@/hooks/useTranslate";
-import { EntityType } from "@/services/types";
 import { Pattern } from "@/types/block.types";
 import { truncate } from "@/utils/text";
 
+import { useNode } from "../../hooks/useNode";
 import { BlockTypes } from "../../types/visual-editor.types";
-import { getBlockConfig } from "../../utils/block.utils";
 
-export const NodeBody = ({ blockId }: { blockId: string }) => {
+export const NodeBody = () => {
   const { t } = useTranslate();
-  const { data: block } = useGet(blockId, { entity: EntityType.BLOCK });
-
-  if (!block?.message) {
-    return null;
-  }
-
-  const config = getBlockConfig(block.message);
+  const { config, data } = useNode();
 
   return (
     <div className="node-block-field-container">
       <div className="node-block-field">
         <TriggerIcon color={config.color} style={{ flexShrink: 0 }} />
-        {block?.patterns?.length ? (
-          block?.patterns
+        {data?.patterns?.length ? (
+          data?.patterns
             .map((pattern: Pattern) => {
               if (typeof pattern === "string") {
                 return pattern;
@@ -67,24 +59,24 @@ export const NodeBody = ({ blockId }: { blockId: string }) => {
           <span style={{ color: "#939393" }}>{t("label.no_patterns")}</span>
         )}
       </div>
-      {config.type === "attachment" && "attachment" in block.message ? (
+      {config.type === "attachment" && "attachment" in data.message ? (
         <div className="node-block-field">
           <UnifiedIcon
             Icon={BrokenImageOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          {t("label.attachment")}: {block.message.attachment.type}
+          {t("label.attachment")}: {data.message.attachment.type}
         </div>
       ) : null}
-      {config.type === "plugin" && "plugin" in block.message ? (
+      {config.type === "plugin" && "plugin" in data.message ? (
         <div className="node-block-field ">
           <UnifiedIcon
             Icon={ExtensionOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          <span>Plugin: {block.message.plugin}</span>
+          <span>Plugin: {data.message.plugin}</span>
         </div>
       ) : null}
       {[BlockTypes.list].includes(BlockTypes[config.type]) ? (
@@ -98,15 +90,15 @@ export const NodeBody = ({ blockId }: { blockId: string }) => {
         </div>
       ) : null}
       {config.type === "text" &&
-      Array.isArray(block.message) &&
-      block.message.length > 0 ? (
+      Array.isArray(data.message) &&
+      data.message.length > 0 ? (
         <div className="node-block-field ">
           <UnifiedIcon
             Icon={ChatBubbleOutlineOutlinedIcon}
             color={config.color}
             size="21px"
           />
-          {truncate(block?.message[0])}
+          {truncate(data?.message[0])}
         </div>
       ) : null}
       {[BlockTypes.quickReplies, BlockTypes.buttons].includes(
@@ -121,7 +113,7 @@ export const NodeBody = ({ blockId }: { blockId: string }) => {
           {
             //TODO: need to be updated
             // @ts-ignore
-            truncate(block?.message.text)
+            truncate(data?.message.text)
           }
         </div>
       ) : null}
@@ -139,8 +131,8 @@ export const NodeBody = ({ blockId }: { blockId: string }) => {
               //TODO: need to be updated
               // @ts-ignore
               (
-                (block?.message as any).buttons ||
-                (block?.message as any).quickReplies
+                (data?.message as any).buttons ||
+                (data?.message as any).quickReplies
               ).map((button, idx: number) => (
                 <Chip
                   key={`${button.title}_${idx}`}

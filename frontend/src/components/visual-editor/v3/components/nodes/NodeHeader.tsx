@@ -8,21 +8,12 @@
 
 import { Tooltip } from "@mui/material";
 
-import { useGet } from "@/hooks/crud/useGet";
-import { EntityType } from "@/services/types";
-
-import { getBlockConfig } from "../../utils/block.utils";
+import { useNode } from "../../hooks/useNode";
 
 import { NodeControls } from "./NodeControls";
 
-export const NodeHeader = ({ blockId }: { blockId: string }) => {
-  const { data: block } = useGet(blockId, { entity: EntityType.BLOCK });
-
-  if (!block?.message) {
-    return null;
-  }
-
-  const config = getBlockConfig(block.message);
+export const NodeHeader = () => {
+  const { config, data } = useNode();
 
   return (
     <div
@@ -31,7 +22,7 @@ export const NodeHeader = ({ blockId }: { blockId: string }) => {
       }}
       className="node-title"
     >
-      <NodeControls blockId={blockId} />
+      <NodeControls />
       <div className="node-header-icon">
         <config.Icon width={22} height={22} />
       </div>
@@ -39,7 +30,7 @@ export const NodeHeader = ({ blockId }: { blockId: string }) => {
       <Tooltip
         sx={{ minHeight: "135px" }}
         arrow
-        title={block?.name}
+        title={data.title}
         placement="top"
       >
         <div
@@ -49,7 +40,7 @@ export const NodeHeader = ({ blockId }: { blockId: string }) => {
             textOverflow: "ellipsis",
           }}
         >
-          {block?.name}{" "}
+          {data.title}{" "}
         </div>
       </Tooltip>
     </div>
