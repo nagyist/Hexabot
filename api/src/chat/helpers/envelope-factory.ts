@@ -91,14 +91,19 @@ export class EnvelopeFactory {
    * and then compiles it with the current context and settings using Handlebars templates.
    *
    * @param text - The text or an array of text strings to be processed.
+   * @param translate - Whether text should be translated or not.
    * @returns - The processed and localized text.
    */
-  public processText(text: string | string[]): string {
+  public processText(text: string | string[], translate = true): string {
     let result = Array.isArray(text) ? getRandomElement(text) : text;
-    result = this.i18n.t(result, {
-      lang: this.context.user.language,
-      defaultValue: result,
-    });
+
+    if (translate) {
+      result = this.i18n.t(result, {
+        lang: this.context.user.language,
+        defaultValue: result,
+      });
+    }
+
     result = EnvelopeFactory.compileHandlebarsTemplate(
       result,
       this.context,
@@ -155,7 +160,7 @@ export class EnvelopeFactory {
       envelope.appendToQuickReplies({
         ...qr,
         title: this.processText(qr.title),
-        payload: this.processText(qr.payload),
+        payload: this.processText(qr.payload, false),
       });
     });
 
@@ -186,7 +191,7 @@ export class EnvelopeFactory {
         envelope.appendToButtons({
           ...btn,
           title: this.processText(btn.title),
-          payload: this.processText(btn.payload),
+          payload: this.processText(btn.payload, false),
         });
       } else {
         envelope.appendToButtons({
@@ -220,7 +225,7 @@ export class EnvelopeFactory {
       envelope.appendToQuickReplies({
         ...qr,
         title: this.processText(qr.title),
-        payload: this.processText(qr.payload),
+        payload: this.processText(qr.payload, false),
       });
     });
 
